@@ -14,13 +14,6 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
-module "access_token" {
-    source     = "./modules/secret"
-    acessor    = module.croatianbot.service_account_email
-    id         = "twitter_access_token"
-    value      = "${var.access_token}"
-}
-
 module "croatianbot" {
   source               = "./modules/function"
   project              = var.project
@@ -35,6 +28,36 @@ module "croatianbot" {
   ]
 }
 
+module "client_id" {
+    source     = "./modules/secret"
+    acessor    = module.croatianbot.service_account_email
+    id         = "twitter_client_id"
+    value      = "${var.client_id}"
+    depends_on = [
+        module.croatianbot,
+    ]
+}
+
+module "client_secret" {
+    source     = "./modules/secret"
+    acessor    = module.croatianbot.service_account_email
+    id         = "twitter_client_secret"
+    value      = "${var.client_secret}"
+    depends_on = [
+        module.croatianbot,
+    ]
+}
+
+module "refresh_token" {
+    source     = "./modules/secret"
+    acessor    = module.croatianbot.service_account_email
+    id         = "twitter_refresh_token"
+    value      = "${var.refresh_token}"
+    depends_on = [
+        module.croatianbot,
+    ]
+}
+
 resource "google_cloud_scheduler_job" "croatianbot_job" {
   name        = "croatianbot_job"
   description = "triggers croatianbot every hour"
@@ -45,7 +68,8 @@ resource "google_cloud_scheduler_job" "croatianbot_job" {
     data       = base64encode("test")
   }
   depends_on = [
-    module.access_token,
-    module.croatianbot,
+    module.client_id,
+    module.client_secret,
+    module.refresh_token,
   ]
 }

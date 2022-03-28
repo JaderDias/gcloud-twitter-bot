@@ -6,5 +6,9 @@ variable "location_id" {
 variable "region" {
 	default = "us-central1"
 }
-variable "access_token" {
+variable "client_id" {
+}
+variable "client_secret" {
+}
+variable "refresh_token" {
 }
