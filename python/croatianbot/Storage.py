@@ -18,10 +18,13 @@ def read_and_update_published_time() -> bool:
         return True
     return False
 
-def read_and_increment_pub_count() -> int:
+def read_pub_count() -> int:
     blob = get_blob('published_count')
     pub_count = 0
     if blob.exists():
         pub_count = int(blob.download_as_string())
-    blob.upload_from_string(str(pub_count + 1))
     return pub_count
+
+def update_pub_count(new_value: int) -> None:
+    blob = get_blob('published_count')
+    blob.upload_from_string(str(new_value))

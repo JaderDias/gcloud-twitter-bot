@@ -1,3 +1,6 @@
+# data files
+*.csv
+
 # terraform
 .terraform
 *.tfstate
